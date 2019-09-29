@@ -1,0 +1,24 @@
+name: master_detail_scaffold_example
+description: Demonstrates how to use the master_detail_scaffold package
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^3.1.0
+
+  cupertino_icons: ^0.1.2
+  master_detail_scaffold:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
