@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:master_detail_scaffold/master_detail_scaffold.dart';
 
 import 'layout_helper.dart';
-import 'master_detail_page_route.dart';
+import 'material_master_detail_page_route.dart';
 
 class MasterDetailNavigator extends StatelessWidget {
   const MasterDetailNavigator(
@@ -17,6 +18,7 @@ class MasterDetailNavigator extends StatelessWidget {
       this.floatingActionButton,
       this.floatingActionButtonLocation,
       this.floatingActionButtonAnimator,
+      this.pageRouteBuilder,
       Key key})
       : super(key: key);
 
@@ -43,6 +45,8 @@ class MasterDetailNavigator extends StatelessWidget {
   final FloatingActionButtonLocation floatingActionButtonLocation;
 
   final FloatingActionButtonAnimator floatingActionButtonAnimator;
+
+  final MasterDetailPageRouteBuilder pageRouteBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +79,14 @@ class MasterDetailNavigator extends StatelessWidget {
                 )
               : detailsPaneBuilder;
         }
-        return MasterDetailPageRoute(
-            builder: builder,
-            settings: settings,
-            twoPanesWidthBreakpoint: twoPanesWidthBreakpoint);
+        if (pageRouteBuilder == null) {
+          return MaterialMasterDetailPageRoute(
+              builder: builder,
+              settings: settings,
+              twoPanesWidthBreakpoint: twoPanesWidthBreakpoint);
+        }
+        final pageRoute = pageRouteBuilder(builder, settings);
+        return pageRoute;
       },
     );
   }

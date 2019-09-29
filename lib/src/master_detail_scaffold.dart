@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'layout_helper.dart';
 import 'master_detail_navigator.dart';
 
+typedef MasterDetailPageRouteBuilder<T> = PageRoute<T> Function(
+    WidgetBuilder, RouteSettings);
+
 /// A scaffold for implementing the master-detail flow
-class MasterDetailScaffold extends StatelessWidget {
+class MasterDetailScaffold extends StatefulWidget {
   MasterDetailScaffold(
       {@required this.navigatorKey,
       @required this.masterPaneBuilder,
@@ -19,6 +22,7 @@ class MasterDetailScaffold extends StatelessWidget {
       this.floatingActionButtonLocation,
       this.floatingActionButtonAnimator,
       this.twoPanesWidthBreakpoint = 600,
+      this.pageRouteBuilder,
       Key key})
       : assert(navigatorKey != null),
         assert(masterPaneBuilder != null),
@@ -63,43 +67,79 @@ class MasterDetailScaffold extends StatelessWidget {
 
   final FloatingActionButtonAnimator floatingActionButtonAnimator;
 
+  /// Function that creates a modal route that can be used determine what the transition should be when navigation occurs.
+  /// If left as null, then the [MaterialMasterDetailPageRoute] is used as a default
+  final MasterDetailPageRouteBuilder pageRouteBuilder;
+
+  static MasterDetailScaffoldState of(BuildContext context,
+      {bool nullOk = false}) {
+    assert(nullOk != null);
+    assert(context != null);
+    final MasterDetailScaffoldState result = context
+        .ancestorStateOfType(const TypeMatcher<MasterDetailScaffoldState>());
+    if (nullOk || result != null) return result;
+    throw FlutterError(
+        'MasterDetailScaffold.of() called with a context that does not contain a MasterDetailScaffold.');
+  }
+
+  @override
+  MasterDetailScaffoldState createState() => MasterDetailScaffoldState();
+}
+
+class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
+  bool get isDisplayingBothPanes =>
+      LayoutHelper.showBothPanes(context, widget.twoPanesWidthBreakpoint);
+
   @override
   Widget build(BuildContext context) {
     final MasterDetailNavigator masterDetailNavigator = MasterDetailNavigator(
-      navigatorKey: navigatorKey,
-      initialRoute: initialRoute,
-      detailsRoute: detailsRoute,
-      detailsAppBar: detailsAppBar,
-      detailsPaneContent: detailsPaneBuilder,
-      masterPaneContent: masterPaneBuilder,
-      masterAppBar: masterAppBar,
-      initialDetailsPaneContent: initialDetailsPaneContent,
-      twoPanesWidthBreakpoint: twoPanesWidthBreakpoint,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonAnimator: floatingActionButtonAnimator,
-      floatingActionButtonLocation: floatingActionButtonLocation,
+      navigatorKey: widget.navigatorKey,
+      initialRoute: widget.initialRoute,
+      detailsRoute: widget.detailsRoute,
+      detailsAppBar: widget.detailsAppBar,
+      detailsPaneContent: widget.detailsPaneBuilder,
+      masterPaneContent: widget.masterPaneBuilder,
+      masterAppBar: widget.masterAppBar,
+      initialDetailsPaneContent: widget.initialDetailsPaneContent,
+      twoPanesWidthBreakpoint: widget.twoPanesWidthBreakpoint,
+      floatingActionButton: widget.floatingActionButton,
+      floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
+      pageRouteBuilder: widget.pageRouteBuilder,
     );
-    if (LayoutHelper.showBothPanes(context, twoPanesWidthBreakpoint)) {
-      return Scaffold(
-        appBar: masterAppBar,
-        body: Row(
-          children: [
-            Container(
-              child: Builder(
-                builder: masterPaneBuilder,
-              ),
-              width: masterPaneWidth,
+    final Widget content = LayoutHelper.showBothPanes(
+            context, widget.twoPanesWidthBreakpoint)
+        ? Scaffold(
+            appBar: widget.masterAppBar,
+            body: Row(
+              children: [
+                Container(
+                  child: Builder(
+                    builder: widget.masterPaneBuilder,
+                  ),
+                  width: widget.masterPaneWidth,
+                ),
+                Expanded(
+                  child: masterDetailNavigator,
+                ),
+              ],
             ),
-            Expanded(
-              child: masterDetailNavigator,
-            ),
-          ],
-        ),
-        floatingActionButton: floatingActionButton,
-        floatingActionButtonAnimator: floatingActionButtonAnimator,
-        floatingActionButtonLocation: floatingActionButtonLocation,
-      );
-    }
-    return masterDetailNavigator;
+            floatingActionButton: widget.floatingActionButton,
+            floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+            floatingActionButtonLocation: widget.floatingActionButtonLocation,
+          )
+        : masterDetailNavigator;
+
+    return WillPopScope(
+      child: content,
+      onWillPop: () async {
+        // currently needed for better handling of the back navigation on the web as it's otherwise not possible
+        if (widget.navigatorKey.currentState.canPop()) {
+          widget.navigatorKey.currentState.pop();
+          return false;
+        }
+        return true;
+      },
+    );
   }
 }

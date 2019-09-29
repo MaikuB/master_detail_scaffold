@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'layout_helper.dart';
 
-class MasterDetailPageRoute<T> extends MaterialPageRoute<T> {
+/// The default modal route with transition that is used by the [MasterDetailPageScaffold].
+/// No animation transition occurs when both the master and detail panes are displayed.
+/// When only pane is displayed then it functions the same as the [MaterialPageRoute].
+class MaterialMasterDetailPageRoute<T> extends MaterialPageRoute<T> {
   final double twoPanesWidthBreakpoint;
-  MasterDetailPageRoute(
+  MaterialMasterDetailPageRoute(
       {@required WidgetBuilder builder,
       @required RouteSettings settings,
       @required this.twoPanesWidthBreakpoint})
