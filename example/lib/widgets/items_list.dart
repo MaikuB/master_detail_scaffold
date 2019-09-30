@@ -6,9 +6,13 @@ import '../models/dummy_content.dart';
 import '../models/dummy_item.dart';
 
 class ItemsList extends StatelessWidget {
-  const ItemsList({@required this.navigatorKey, Key key}) : super(key: key);
+  const ItemsList(
+      {@required this.selectedItem, @required this.navigatorKey, Key key})
+      : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey;
+
+  final DummyItem selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +23,10 @@ class ItemsList extends StatelessWidget {
           final DummyItem item = content.items[index];
           return ListTile(
             title: Text(item.title),
-            selected: item == content.selectedItem,
+            selected: item == selectedItem,
             onTap: () async {
-              content.updateSelectedItem(item);
-              await navigatorKey.currentState.pushNamed(RouteNames.itemDetails);
+              await navigatorKey.currentState
+                  .pushNamed(RouteNames.itemDetails, arguments: item);
             },
           );
         },

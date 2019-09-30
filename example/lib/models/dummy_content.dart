@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
-
 import 'dummy_item.dart';
 
-class DummyContent extends ChangeNotifier {
+class DummyContent {
   DummyContent() {
     for (int i = 0; i < 10; i++) {
       final int itemNumber = i + 1;
@@ -12,11 +10,4 @@ class DummyContent extends ChangeNotifier {
   }
 
   final List<DummyItem> items = [];
-
-  DummyItem selectedItem;
-
-  void updateSelectedItem(DummyItem item) {
-    selectedItem = item;
-    notifyListeners();
-  }
 }
