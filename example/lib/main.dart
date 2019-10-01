@@ -16,8 +16,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
   DummyItem selectedItem;
 
   @override
@@ -36,16 +34,14 @@ class _MyAppState extends State<MyApp> {
                 selectedItem = details as DummyItem;
               });
             },
-            navigatorKey: _navigatorKey,
             initialRoute: RouteNames.home,
             detailsRoute: RouteNames.itemDetails,
-            masterAppBar: AppBar(
+            initialAppBar: AppBar(
               title: Text('Master-detail Flow Demo'),
             ),
             masterPaneWidth: 400,
             masterPaneBuilder: (BuildContext context) => ItemsList(
               selectedItem: selectedItem,
-              navigatorKey: _navigatorKey,
             ),
             detailsPaneBuilder: (BuildContext context) =>
                 ItemDetails(item: selectedItem),
@@ -56,16 +52,19 @@ class _MyAppState extends State<MyApp> {
                 builder: (context) => Text(selectedItem.title),
               ),
             ),
-            floatingActionButton: Builder(
-              builder: (context) => FloatingActionButton(
-                child: Icon(Icons.reply),
-                onPressed: () {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Replying to ${selectedItem.title}'),
-                    ),
-                  );
-                },
+            floatingActionButton: Visibility(
+              visible: selectedItem != null,
+              child: Builder(
+                builder: (context) => FloatingActionButton(
+                  child: Icon(Icons.reply),
+                  onPressed: () {
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Replying to ${selectedItem.title}'),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

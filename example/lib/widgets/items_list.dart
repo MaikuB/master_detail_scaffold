@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:master_detail_scaffold/master_detail_scaffold.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/route_names.dart';
@@ -6,11 +7,7 @@ import '../models/dummy_content.dart';
 import '../models/dummy_item.dart';
 
 class ItemsList extends StatelessWidget {
-  const ItemsList(
-      {@required this.selectedItem, @required this.navigatorKey, Key key})
-      : super(key: key);
-
-  final GlobalKey<NavigatorState> navigatorKey;
+  const ItemsList({@required this.selectedItem, Key key}) : super(key: key);
 
   final DummyItem selectedItem;
 
@@ -25,7 +22,8 @@ class ItemsList extends StatelessWidget {
             title: Text(item.title),
             selected: item == selectedItem,
             onTap: () async {
-              await navigatorKey.currentState
+              await MasterDetailScaffold.of(context)
+                  .detailsPaneNavigator
                   .pushNamed(RouteNames.itemDetails, arguments: item);
             },
           );

@@ -28,7 +28,9 @@ class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
     super.didPop(route, previousRoute);
     if (previousRoute.settings.name == _initialRoute) {
       _onDetailsChanged(null);
+      return;
     }
+    _triggerDetailsChangedCallback(previousRoute);
   }
 
   @override

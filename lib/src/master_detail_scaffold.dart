@@ -13,12 +13,11 @@ typedef DetailsChangedCallback = void Function(Object details);
 /// A scaffold for implementing the master-detail flow
 class MasterDetailScaffold extends StatefulWidget {
   const MasterDetailScaffold(
-      {@required this.navigatorKey,
-      @required this.masterPaneBuilder,
+      {@required this.masterPaneBuilder,
       @required this.masterPaneWidth,
       @required this.detailsAppBar,
       @required this.detailsPaneBuilder,
-      @required this.masterAppBar,
+      @required this.initialAppBar,
       @required this.initialRoute,
       @required this.detailsRoute,
       @required this.onDetailsChanged,
@@ -42,8 +41,7 @@ class MasterDetailScaffold extends StatefulWidget {
       this.drawerScrimColor,
       this.drawerEdgeDragWidth,
       Key key})
-      : assert(navigatorKey != null),
-        assert(masterPaneBuilder != null),
+      : assert(masterPaneBuilder != null),
         assert(masterPaneWidth != null),
         assert(detailsAppBar != null),
         assert(detailsPaneBuilder != null),
@@ -51,10 +49,11 @@ class MasterDetailScaffold extends StatefulWidget {
         assert(onDetailsChanged != null),
         super(key: key);
 
-  final GlobalKey<NavigatorState> navigatorKey;
+  /// The app bar to show when the both the master and details pane are visible.
+  /// If only one pane is visible, this the app bar that is shown when it's the master pane that is visible i.e. when on the [initialRoute] as the user has selected an item yet
+  final PreferredSizeWidget initialAppBar;
 
-  final PreferredSizeWidget masterAppBar;
-
+  /// The app bar to shown when only the details pane is visible i.e. when on the [detailsRoute] after the user has selected an item.
   final PreferredSizeWidget detailsAppBar;
 
   /// The name of the initial route. When the instance of the [Navigator] associated with the [MasterDetails]
@@ -116,7 +115,7 @@ class MasterDetailScaffold extends StatefulWidget {
   /// The callback is triggered in the following conditions:
   ///
   /// - when the [initialRoute] is displayed. The object passed through the callback would be null
-  /// - When the [detailsRoute] is presented. The object passed through the callback would be arguments passed to the route
+  /// - When the [detailsRoute] is displayed. The object passed through the callback would be arguments passed to the route
   ///
   /// The details object passed through the callback can then be used to update the state of the application e.g. call `setState`
   final DetailsChangedCallback onDetailsChanged;
@@ -146,10 +145,16 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
   bool get isDisplayingBothPanes =>
       LayoutHelper.showBothPanes(context, widget.twoPanesWidthBreakpoint);
 
+  /// The navigator widget that encloses the details pane.
+  /// Use this change the route that determines that details of the item that needs to be shown
+  NavigatorState get detailsPaneNavigator => _navigatorKey.currentState;
+
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     final Navigator masterDetailNavigator = Navigator(
-      key: widget.navigatorKey,
+      key: _navigatorKey,
       initialRoute: widget.initialRoute,
       observers: [
         MasterDetailRouteObserver(
@@ -163,7 +168,7 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
           builder = (BuildContext context) => !LayoutHelper.showBothPanes(
                   context, widget.twoPanesWidthBreakpoint)
               ? Scaffold(
-                  appBar: widget.masterAppBar,
+                  appBar: widget.initialAppBar,
                   body: Builder(builder: widget.masterPaneBuilder),
                   persistentFooterButtons: widget.persistentFooterButtons,
                   drawer: widget.drawer,
@@ -200,9 +205,9 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
         }
         if (widget.pageRouteBuilder == null) {
           return MaterialMasterDetailPageRoute(
-              builder: builder,
-              settings: settings,
-              twoPanesWidthBreakpoint: widget.twoPanesWidthBreakpoint);
+            builder: builder,
+            settings: settings,
+          );
         }
         final pageRoute = widget.pageRouteBuilder(builder, settings);
         return pageRoute;
@@ -211,7 +216,7 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
     final Widget content = LayoutHelper.showBothPanes(
             context, widget.twoPanesWidthBreakpoint)
         ? Scaffold(
-            appBar: widget.masterAppBar,
+            appBar: widget.initialAppBar,
             body: Row(
               children: [
                 Container(
@@ -248,8 +253,7 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
       child: content,
       onWillPop: () async {
         // currently needed for better handling of the back navigation on the web as it's otherwise not possible
-        if (widget.navigatorKey.currentState.canPop()) {
-          widget.navigatorKey.currentState.pop();
+        if (await _navigatorKey.currentState.maybePop()) {
           return false;
         }
         return true;
