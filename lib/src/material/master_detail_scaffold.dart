@@ -1,14 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'layout_helper.dart';
+import '../foundation.dart';
 import 'material_master_detail_page_route.dart';
-import 'master_detail_route_observer.dart';
-
-typedef MasterDetailPageRouteBuilder<T> = PageRoute<T> Function(
-    WidgetBuilder builder, RouteSettings settings);
-
-typedef DetailsChangedCallback = void Function(Object details);
 
 /// A scaffold for implementing the master-detail flow
 class MasterDetailScaffold extends StatefulWidget {
@@ -91,8 +85,10 @@ class MasterDetailScaffold extends StatefulWidget {
 
   final List<Widget> persistentFooterButtons;
 
+  /// See [Scaffold.drawer]. Only shown when both panes are displayed or if only one pane is visible, it's the master pane that is shown
   final Widget drawer;
 
+  /// See [Scaffold.endDrawer]. Only shown when both panes are displayed or if only one pane is visible, it's the master pane that is shown
   final Widget endDrawer;
 
   final Color drawerScrimColor;
@@ -180,7 +176,6 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
                   primary: widget.primary,
                   drawerDragStartBehavior: widget.drawerDragStartBehavior,
                   extendBody: widget.extendBody,
-                  extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
                   drawerScrimColor: widget.drawerScrimColor,
                   drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
                 )
@@ -200,6 +195,12 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
                       widget.floatingActionButtonAnimator,
                   floatingActionButtonLocation:
                       widget.floatingActionButtonLocation,
+                  bottomNavigationBar: widget.bottomNavigationBar,
+                  bottomSheet: widget.bottomSheet,
+                  backgroundColor: widget.backgroundColor,
+                  resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+                  primary: widget.primary,
+                  extendBody: widget.extendBody,
                 )
               : detailsPane;
         }
@@ -243,7 +244,6 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
             primary: widget.primary,
             drawerDragStartBehavior: widget.drawerDragStartBehavior,
             extendBody: widget.extendBody,
-            extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
             drawerScrimColor: widget.drawerScrimColor,
             drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
           )

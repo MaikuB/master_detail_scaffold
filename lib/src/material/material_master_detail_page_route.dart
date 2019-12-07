@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:master_detail_scaffold/src/master_detail_scaffold.dart';
+import 'master_detail_scaffold.dart';
 
 /// The default modal route with transition that is used by the [MasterDetailPageScaffold].
 /// No animation transition occurs when both the master and detail panes are displayed.

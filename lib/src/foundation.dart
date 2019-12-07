@@ -1,7 +1,20 @@
 import 'package:flutter/widgets.dart';
-import 'master_detail_scaffold.dart';
+
+typedef MasterDetailPageRouteBuilder<T> = PageRoute<T> Function(
+    WidgetBuilder builder, RouteSettings settings);
+
+typedef DetailsChangedCallback = void Function(dynamic details);
+
+class LayoutHelper {
+  /// Used to evaluate if both the master and detail panes should be shown
+  static bool showBothPanes(
+      BuildContext context, double twoPanesWidthBreakpoint) {
+    return MediaQuery.of(context).size.width >= twoPanesWidthBreakpoint;
+  }
+}
 
 class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
+  // TODO: allow details route to a pattern e.g. itemId={itemId}
   factory MasterDetailRouteObserver(
       {@required String initialRoute,
       @required String detailsRoute,

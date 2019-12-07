@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_detail_scaffold/master_detail_scaffold.dart';
 import 'package:master_detail_scaffold_example/constants/route_names.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  DummyItem selectedItem;
+  DummyItem _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -28,46 +29,48 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
         home: Consumer<DummyContent>(
-          builder: (_, content, __) => MasterDetailScaffold(
-            onDetailsChanged: (details) {
-              setState(() {
-                selectedItem = details as DummyItem;
-              });
-            },
-            initialRoute: RouteNames.home,
-            detailsRoute: RouteNames.itemDetails,
-            initialAppBar: AppBar(
-              title: Text('Master-detail Flow Demo'),
-            ),
-            masterPaneWidth: 400,
-            masterPaneBuilder: (BuildContext context) => ItemsList(
-              selectedItem: selectedItem,
-            ),
-            detailsPaneBuilder: (BuildContext context) =>
-                ItemDetails(item: selectedItem),
-            detailsAppBar: AppBar(
-              // the [Builder] widget is needed to ensure that the widget for displaying the title gets rebuilt based on the selected item.
-              // Without the [Builder] widget, the title is set to the value that was originally passed through
-              title: Builder(
-                builder: (context) => Text(selectedItem.title),
+          builder: (_, content, __) {
+            return MasterDetailScaffold(
+              onDetailsChanged: (details) {
+                setState(() {
+                  _selectedItem = details as DummyItem;
+                });
+              },
+              initialRoute: RouteNames.home,
+              detailsRoute: RouteNames.itemDetails,
+              initialAppBar: AppBar(
+                title: Text('Master-detail Flow Demo'),
               ),
-            ),
-            floatingActionButton: Visibility(
-              visible: selectedItem != null,
-              child: Builder(
-                builder: (context) => FloatingActionButton(
-                  child: Icon(Icons.reply),
-                  onPressed: () {
-                    Scaffold.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Replying to ${selectedItem.title}'),
-                      ),
-                    );
-                  },
+              masterPaneWidth: 400,
+              masterPaneBuilder: (BuildContext context) => ItemsList(
+                selectedItem: _selectedItem,
+              ),
+              detailsPaneBuilder: (BuildContext context) =>
+                  ItemDetails(item: _selectedItem),
+              detailsAppBar: AppBar(
+                // the [Builder] widget is needed to ensure that the widget for displaying the title gets rebuilt based on the selected item.
+                // Without the [Builder] widget, the title is set to the value that was originally passed through
+                title: Builder(
+                  builder: (context) => Text(_selectedItem.title),
                 ),
               ),
-            ),
-          ),
+              floatingActionButton: Visibility(
+                visible: _selectedItem != null,
+                child: Builder(
+                  builder: (context) => FloatingActionButton(
+                    child: Icon(Icons.reply),
+                    onPressed: () {
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Replying to ${_selectedItem.title}'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

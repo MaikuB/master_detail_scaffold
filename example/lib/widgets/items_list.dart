@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_detail_scaffold/master_detail_scaffold.dart';
 import 'package:provider/provider.dart';
