@@ -16,7 +16,7 @@ class MasterDetailScaffold extends StatefulWidget {
       @required this.detailsRoute,
       @required this.onDetailsPaneRouteChanged,
       this.initialDetailsPaneBuilder,
-      this.twoPanesWidthBreakpoint = 600,
+      this.twoPanesWidthBreakpoint,
       this.pageRouteBuilder,
       this.floatingActionButton,
       this.floatingActionButtonLocation,
