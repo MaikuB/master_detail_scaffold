@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:master_detail_scaffold/master_detail_scaffold.dart';
-import 'package:master_detail_scaffold_example/constants/route_names.dart';
-import 'package:master_detail_scaffold_example/models/dummy_item.dart';
-import 'package:master_detail_scaffold_example/widgets/item_details.dart';
-import 'package:master_detail_scaffold_example/widgets/items_list.dart';
 import 'package:provider/provider.dart';
-
+import 'constants/route_names.dart';
+import 'models/dummy_item.dart';
+import 'widgets/item_details.dart';
+import 'widgets/items_list.dart';
 import 'models/dummy_content.dart';
 
 void main() => runApp(MyApp());
