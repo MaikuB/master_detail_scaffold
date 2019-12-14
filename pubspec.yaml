@@ -1,6 +1,6 @@
 name: master_detail_scaffold
 description: A package for implementing a responsive master-detail scaffold widget
-version: 1.1.1
+version: 1.1.1+1
 homepage: https://github.com/MaikuB/master_detail_scaffold
 
 environment:

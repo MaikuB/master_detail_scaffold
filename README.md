@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/master_detail_scaffold.svg)](https://pub.dartlang.org/packages/master_detail_scaffold)
 [![Build Status](https://api.cirrus-ci.com/github/MaikuB/master_detail_scaffold.svg)](https://cirrus-ci.com/github/MaikuB/master_detail_scaffold/master)
 
-A Flutter package that contains widgets that help implement a responsive master-detail layout. The widget is based on the material design scaffold.
+A Flutter package that contains widgets that help implement a responsive master-detail layout. The widget is based on the material design scaffold. Go [here](https://maikub.github.io/masterdetailscaffold/) to see the example running on the web
 
 ## Getting started
 
@@ -62,7 +62,7 @@ MasterDetailScaffold(
 
 The key parts are
 
-* `twoPanesWidthBreakpoint`: the width breakpoint for showing both the master and details pane together
+* `twoPanesWidthBreakpoint`: the width breakpoint for showing both the master and details pane together. The back button is hidden whe both panes are visible
 * `initialRoute`: the name of the route use when no details are shown in the details pane
 * `detailsRoute`: the name of the route to use when details are shown in the details pane
 * `masterPaneWidth`: the width of the master pane. Applicable when both the master and details pane are shown
@@ -70,7 +70,7 @@ The key parts are
 * `detailsPaneBuilder`: determines what to show in the details pane. When both the master and details pane are shown, it is assumed to take the remaining of width of the screen
 * `onDetailsPaneRouteChanged`: the callback trigger when the route in the details pane changes. Use this to find out get the route/path and query string parameters so you can display the appropriate content
 
-To trigger navigation in the details pane, you can retrieve the navigator associated with the details pane by calling `MasterDetailScaffold.of(context).detailsPaneNavigator`. Normally, this wouldn't be needed and you would only need to call `Navigator.of(context)` but this doesn't appear to get the navigator associated with the details pane. URI-based navigation is expected via named routes. By default the page transition applied is the same as the `MaterialPageRoute`. Should you want to use a different transition style, this can be specified using the `pageRouteBuilder` property.
+To trigger navigation in the details pane, you can retrieve the navigator associated with the details pane by calling `MasterDetailScaffold.of(context).detailsPaneNavigator`. Normally, this wouldn't be needed and you would only need to call `Navigator.of(context)` but this doesn't appear to get the navigator associated with the details pane. URI-based navigation is expected via named routes. By default the page transition applied is the same as the `MaterialPageRoute`, though when both panes are shown no animation is used when the details change. Should you want to use a different transition style, this can be specified using the `pageRouteBuilder` property.
 
 Note that I've found that entering a URL that should go to a specific details page doesn't work. This is likely due to the fact that Flutter's web support for web development isn't stable yet. Should you find a solution for this, please submit a pull request.
 
