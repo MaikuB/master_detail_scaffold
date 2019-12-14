@@ -23,6 +23,7 @@ MasterDetailScaffold(
         _selectedItem = null;
     });
     },
+    twoPanesWidthBreakpoint: 600,
     initialRoute: RouteNames.home,
     detailsRoute: RouteNames.itemDetails,
     initialAppBar: AppBar(
@@ -61,6 +62,7 @@ MasterDetailScaffold(
 
 The key parts are
 
+* `twoPanesWidthBreakpoint`: the width breakpoint for showing both the master and details pane together
 * `initialRoute`: the name of the route use when no details are shown in the details pane
 * `detailsRoute`: the name of the route to use when details are shown in the details pane
 * `masterPaneWidth`: the width of the master pane. Applicable when both the master and details pane are shown

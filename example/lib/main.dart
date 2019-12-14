@@ -43,6 +43,7 @@ class _MyAppState extends State<MyApp> {
                   _selectedItem = null;
                 });
               },
+              twoPanesWidthBreakpoint: 600,
               initialRoute: RouteNames.home,
               detailsRoute: RouteNames.itemDetails,
               initialAppBar: AppBar(
