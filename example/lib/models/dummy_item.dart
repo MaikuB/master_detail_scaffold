@@ -1,5 +1,10 @@
+import 'package:flutter/foundation.dart';
+
 class DummyItem {
-  const DummyItem(this.title, this.description);
+  const DummyItem(
+      {@required this.id, @required this.title, @required this.description});
+
+  final String id;
 
   final String title;
 

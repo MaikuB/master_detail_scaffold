@@ -31,9 +31,16 @@ class _MyAppState extends State<MyApp> {
         home: Consumer<DummyContent>(
           builder: (_, content, __) {
             return MasterDetailScaffold(
-              onDetailsChanged: (details) {
+              onDetailsPaneRouteChanged:
+                  (String route, Map<String, String> parameters) {
                 setState(() {
-                  _selectedItem = details as DummyItem;
+                  if (route == RouteNames.itemDetails) {
+                    _selectedItem = content.items.firstWhere(
+                        (item) => item.id == parameters['id'],
+                        orElse: null);
+                    return;
+                  }
+                  _selectedItem = null;
                 });
               },
               initialRoute: RouteNames.home,

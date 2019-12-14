@@ -14,7 +14,7 @@ class MasterDetailScaffold extends StatefulWidget {
       @required this.initialAppBar,
       @required this.initialRoute,
       @required this.detailsRoute,
-      @required this.onDetailsChanged,
+      @required this.onDetailsPaneRouteChanged,
       this.initialDetailsPaneBuilder,
       this.twoPanesWidthBreakpoint = 600,
       this.pageRouteBuilder,
@@ -40,7 +40,7 @@ class MasterDetailScaffold extends StatefulWidget {
         assert(detailsAppBar != null),
         assert(detailsPaneBuilder != null),
         assert(twoPanesWidthBreakpoint != null && twoPanesWidthBreakpoint > 0),
-        assert(onDetailsChanged != null),
+        assert(onDetailsPaneRouteChanged != null),
         super(key: key);
 
   /// The app bar to show when the both the master and details pane are visible.
@@ -53,7 +53,15 @@ class MasterDetailScaffold extends StatefulWidget {
   /// The name of the initial route. When the instance of the [Navigator] associated with the [MasterDetails]
   final String initialRoute;
 
-  /// The route to use to show the content in the details pane
+  /// The name of the details route. When trying to show specific content in the details pane, navigation must be
+  /// done used named routes and be done in a manner similar to Uri-based navigation. For example, if
+  /// `detailsRoute` is set to be `item`, navigation can be done as follows
+  ///
+  /// ```
+  /// MasterDetailScaffold.of(context).detailsPaneNavigator.pushNamed(context, 'item?id=1');
+  /// ```
+  ///
+  /// The route and query string parameters will be passed to the [onDetailsPaneRouteChanged] callback.
   final String detailsRoute;
 
   /// Creates the content to show in the master pane
@@ -110,11 +118,12 @@ class MasterDetailScaffold extends StatefulWidget {
   /// Callback that is involved when the details that need to be displayed change.
   /// The callback is triggered in the following conditions:
   ///
-  /// - when the [initialRoute] is displayed. The object passed through the callback would be null
-  /// - When the [detailsRoute] is displayed. The object passed through the callback would be arguments passed to the route
+  /// - when the [initialRoute] is displayed
+  /// - When the [detailsRoute] is displayed
   ///
-  /// The details object passed through the callback can then be used to update the state of the application e.g. call `setState`
-  final DetailsChangedCallback onDetailsChanged;
+  /// The route and query string parameters will be through the callback can then be used to update the state of the application.
+  /// The information can be used to determine what content should be shown in the details pane.
+  final DetailsPaneRouteChangedCallback onDetailsPaneRouteChanged;
 
   /// Function that creates a modal route that can be used determine what the transition should be when navigation occurs.
   /// If left as null, then the [MaterialMasterDetailPageRoute] is used as a default
@@ -125,8 +134,8 @@ class MasterDetailScaffold extends StatefulWidget {
       {bool nullOk = false}) {
     assert(nullOk != null);
     assert(context != null);
-    final MasterDetailScaffoldState result = context
-        .ancestorStateOfType(const TypeMatcher<MasterDetailScaffoldState>());
+    final MasterDetailScaffoldState result =
+        context.findAncestorStateOfType<MasterDetailScaffoldState>();
     if (nullOk || result != null) return result;
     throw FlutterError(
         'MasterDetailScaffold.of() called with a context that does not contain a MasterDetailScaffold.');
@@ -156,11 +165,12 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
         MasterDetailRouteObserver(
             initialRoute: widget.initialRoute,
             detailsRoute: widget.detailsRoute,
-            onDetailsChanged: widget.onDetailsChanged)
+            onDetailsPaneRouteChanged: widget.onDetailsPaneRouteChanged)
       ],
       onGenerateRoute: (settings) {
         WidgetBuilder builder;
-        if (settings.name == widget.initialRoute) {
+        final Uri uri = Uri.parse(settings.name);
+        if (settings.name.toLowerCase() == widget.initialRoute.toLowerCase()) {
           builder = (BuildContext context) => !LayoutHelper.showBothPanes(
                   context, widget.twoPanesWidthBreakpoint)
               ? Scaffold(
@@ -182,7 +192,8 @@ class MasterDetailScaffoldState extends State<MasterDetailScaffold> {
               : widget.initialDetailsPaneBuilder == null
                   ? Container()
                   : Builder(builder: widget.initialDetailsPaneBuilder);
-        } else if (settings.name == widget.detailsRoute) {
+        } else if (uri.path.toLowerCase() ==
+            widget.detailsRoute.toLowerCase()) {
           final Builder detailsPane =
               Builder(builder: widget.detailsPaneBuilder);
           builder = (BuildContext context) => !LayoutHelper.showBothPanes(

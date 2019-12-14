@@ -22,10 +22,10 @@ class ItemsList extends StatelessWidget {
           return ListTile(
             title: Text(item.title),
             selected: item == selectedItem,
-            onTap: () async {
-              await MasterDetailScaffold.of(context)
+            onTap: () {
+              MasterDetailScaffold.of(context)
                   .detailsPaneNavigator
-                  .pushNamed(RouteNames.itemDetails, arguments: item);
+                  .pushNamed('${RouteNames.itemDetails}?id=${item.id}');
             },
           );
         },

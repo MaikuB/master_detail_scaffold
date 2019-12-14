@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 typedef MasterDetailPageRouteBuilder<T> = PageRoute<T> Function(
     WidgetBuilder builder, RouteSettings settings);
 
-typedef DetailsChangedCallback = void Function(dynamic details);
+/// Callback when the route in the details pane changes
+typedef DetailsPaneRouteChangedCallback = void Function(
+    String route, Map<String, String> parameters);
 
 class LayoutHelper {
   /// Used to evaluate if both the master and detail panes should be shown
@@ -14,14 +16,13 @@ class LayoutHelper {
 }
 
 class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
-  // TODO: allow details route to a pattern e.g. itemId={itemId}
   factory MasterDetailRouteObserver(
       {@required String initialRoute,
       @required String detailsRoute,
-      @required DetailsChangedCallback onDetailsChanged}) {
+      @required DetailsPaneRouteChangedCallback onDetailsPaneRouteChanged}) {
     _initialRoute = initialRoute;
     _detailsRoute = detailsRoute;
-    _onDetailsChanged = onDetailsChanged;
+    _onDetailsPaneRouteChanged = onDetailsPaneRouteChanged;
     return _instance;
   }
 
@@ -34,13 +35,14 @@ class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
   static String _detailsRoute;
 
-  static DetailsChangedCallback _onDetailsChanged;
+  static DetailsPaneRouteChangedCallback _onDetailsPaneRouteChanged;
 
   @override
   void didPop(Route route, Route previousRoute) {
     super.didPop(route, previousRoute);
-    if (previousRoute.settings.name == _initialRoute) {
-      _onDetailsChanged(null);
+    if (previousRoute.settings.name.toLowerCase() ==
+        _initialRoute.toLowerCase()) {
+      _onDetailsPaneRouteChanged(_initialRoute, null);
       return;
     }
     _triggerDetailsChangedCallback(previousRoute);
@@ -63,8 +65,9 @@ class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
       return;
     }
 
-    if (route.settings.name == _detailsRoute) {
-      _onDetailsChanged(route.settings.arguments);
+    final Uri uri = Uri.parse(route.settings.name);
+    if (uri.path.toLowerCase() == _detailsRoute.toLowerCase()) {
+      _onDetailsPaneRouteChanged(_detailsRoute, uri.queryParameters);
     }
   }
 }
