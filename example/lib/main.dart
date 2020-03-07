@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Provider<DummyContent>(
-      builder: (_) => DummyContent(),
+      create: (_) => DummyContent(),
       child: MaterialApp(
         title: 'Master-detail Flow Demo',
         theme: ThemeData(
