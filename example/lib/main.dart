@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Provider<DummyContent>(
-      builder: (_) => DummyContent(),
+      create: (_) => DummyContent(),
       child: MaterialApp(
         title: 'Master-detail Flow Demo',
         theme: ThemeData(
@@ -58,7 +58,12 @@ class _MyAppState extends State<MyApp> {
                 // the [Builder] widget is needed to ensure that the widget for displaying the title gets rebuilt based on the selected item.
                 // Without the [Builder] widget, the title is set to the value that was originally passed through
                 title: Builder(
-                  builder: (context) => Text(_selectedItem.title),
+                  builder: (context) => _selectedItem == null
+                      ? SizedBox(
+                          height: 0,
+                          width: 0,
+                        )
+                      : Text(_selectedItem.title),
                 ),
               ),
               floatingActionButton: Visibility(
