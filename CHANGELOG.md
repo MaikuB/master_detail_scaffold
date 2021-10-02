@@ -1,6 +1,8 @@
 ## [2.0.0]
 
 * **Breaking change** migrated to null safety and recreated the example app
+* Updated readme to indicate that Navigator 1.0 is used
+
 ## [1.1.1+2]
 
 * Minor updates to example app
