@@ -6,13 +6,13 @@ import 'master_detail_scaffold.dart';
 /// When only pane is displayed then it functions the same as the [MaterialPageRoute].
 class MaterialMasterDetailPageRoute<T> extends MaterialPageRoute<T> {
   MaterialMasterDetailPageRoute(
-      {@required WidgetBuilder builder, @required RouteSettings settings})
+      {required WidgetBuilder builder, required RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    if (MasterDetailScaffold.of(context).isDisplayingBothPanes) {
+    if (MasterDetailScaffold.of(context)!.isDisplayingBothPanes) {
       return child;
     }
     return super

@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 typedef MasterDetailPageRouteBuilder<T> = PageRoute<T> Function(
-    WidgetBuilder builder, RouteSettings settings);
+    WidgetBuilder? builder, RouteSettings settings);
 
 /// Callback when the route in the details pane changes
 typedef DetailsPaneRouteChangedCallback = void Function(
-    String route, Map<String, String> parameters);
+    String? route, Map<String, String>? parameters);
 
 class LayoutHelper {
   /// Used to evaluate if both the master and detail panes should be shown
@@ -17,9 +17,9 @@ class LayoutHelper {
 
 class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   factory MasterDetailRouteObserver(
-      {@required String initialRoute,
-      @required String detailsRoute,
-      @required DetailsPaneRouteChangedCallback onDetailsPaneRouteChanged}) {
+      {required String initialRoute,
+      required String detailsRoute,
+      required DetailsPaneRouteChangedCallback onDetailsPaneRouteChanged}) {
     _initialRoute = initialRoute;
     _detailsRoute = detailsRoute;
     _onDetailsPaneRouteChanged = onDetailsPaneRouteChanged;
@@ -31,17 +31,17 @@ class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   static final MasterDetailRouteObserver _instance =
       MasterDetailRouteObserver._private();
 
-  static String _initialRoute;
+  static String? _initialRoute;
 
-  static String _detailsRoute;
+  static String? _detailsRoute;
 
-  static DetailsPaneRouteChangedCallback _onDetailsPaneRouteChanged;
+  static late DetailsPaneRouteChangedCallback _onDetailsPaneRouteChanged;
 
   @override
-  void didPop(Route route, Route previousRoute) {
+  void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    if (previousRoute.settings.name.toLowerCase() ==
-        _initialRoute.toLowerCase()) {
+    if (previousRoute!.settings.name!.toLowerCase() ==
+        _initialRoute!.toLowerCase()) {
       _onDetailsPaneRouteChanged(_initialRoute, null);
       return;
     }
@@ -49,24 +49,24 @@ class MasterDetailRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   }
 
   @override
-  void didPush(Route route, Route previousRoute) {
+  void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
     _triggerDetailsChangedCallback(route);
   }
 
   @override
-  void didReplace({Route newRoute, Route oldRoute}) {
+  void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     _triggerDetailsChangedCallback(newRoute);
   }
 
-  void _triggerDetailsChangedCallback(Route route) {
+  void _triggerDetailsChangedCallback(Route? route) {
     if (route == null) {
       return;
     }
 
-    final Uri uri = Uri.parse(route.settings.name);
-    if (uri.path.toLowerCase() == _detailsRoute.toLowerCase()) {
+    final Uri uri = Uri.parse(route.settings.name!);
+    if (uri.path.toLowerCase() == _detailsRoute!.toLowerCase()) {
       _onDetailsPaneRouteChanged(_detailsRoute, uri.queryParameters);
     }
   }

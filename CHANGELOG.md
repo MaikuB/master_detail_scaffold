@@ -1,3 +1,6 @@
+## [2.0.0]
+
+* **Breaking change** migrated to null safety and recreated the example app
 ## [1.1.1+2]
 
 * Minor updates to example app
@@ -13,7 +16,7 @@
 
 ## [1.1.0]
 
-* **BREAKING CHANGE** remove default value for `twoPanesWidthBreakpoint` property
+* **Breaking change** remove default value for `twoPanesWidthBreakpoint` property
 * Add description about `twoPanesWidthBreakpoint` to readme
 
 ## [1.0.0]
