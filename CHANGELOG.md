@@ -2,6 +2,7 @@
 
 * **Breaking change** migrated to null safety and recreated the example app
 * Updated readme to indicate that Navigator 1.0 is used
+* Updated readme to indicate that package may not be suitable for all scenarios
 
 ## [1.1.1+2]
 
