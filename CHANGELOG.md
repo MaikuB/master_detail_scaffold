@@ -1,3 +1,9 @@
+## [2.0.0]
+
+* **Breaking change** migrated to null safety and recreated the example app
+* Updated readme to indicate that Navigator 1.0 is used
+* Updated readme to indicate that package may not be suitable for all scenarios
+
 ## [1.1.1+2]
 
 * Minor updates to example app
@@ -13,7 +19,7 @@
 
 ## [1.1.0]
 
-* **BREAKING CHANGE** remove default value for `twoPanesWidthBreakpoint` property
+* **Breaking change** remove default value for `twoPanesWidthBreakpoint` property
 * Add description about `twoPanesWidthBreakpoint` to readme
 
 ## [1.0.0]

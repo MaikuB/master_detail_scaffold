@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  DummyItem _selectedItem;
+  DummyItem? _selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +31,11 @@ class _MyAppState extends State<MyApp> {
           builder: (_, content, __) {
             return MasterDetailScaffold(
               onDetailsPaneRouteChanged:
-                  (String route, Map<String, String> parameters) {
+                  (String? route, Map<String, String>? parameters) {
                 setState(() {
                   if (route == RouteNames.itemDetails) {
                     _selectedItem = content.items.firstWhere(
-                        (item) => item.id == parameters['id'],
+                        (item) => item.id == parameters!['id'],
                         orElse: null);
                     return;
                   }
@@ -53,7 +53,9 @@ class _MyAppState extends State<MyApp> {
                 selectedItem: _selectedItem,
               ),
               detailsPaneBuilder: (BuildContext context) =>
-                  ItemDetails(item: _selectedItem),
+                  _selectedItem == null
+                      ? SizedBox.shrink()
+                      : ItemDetails(item: _selectedItem!),
               detailsAppBar: AppBar(
                 // the [Builder] widget is needed to ensure that the widget for displaying the title gets rebuilt based on the selected item.
                 // Without the [Builder] widget, the title is set to the value that was originally passed through
@@ -63,7 +65,7 @@ class _MyAppState extends State<MyApp> {
                           height: 0,
                           width: 0,
                         )
-                      : Text(_selectedItem.title),
+                      : Text(_selectedItem!.title),
                 ),
               ),
               floatingActionButton: Visibility(
@@ -72,9 +74,9 @@ class _MyAppState extends State<MyApp> {
                   builder: (context) => FloatingActionButton(
                     child: Icon(Icons.reply),
                     onPressed: () {
-                      Scaffold.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Replying to ${_selectedItem.title}'),
+                          content: Text('Replying to ${_selectedItem!.title}'),
                         ),
                       );
                     },

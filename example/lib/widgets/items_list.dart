@@ -8,9 +8,9 @@ import '../models/dummy_content.dart';
 import '../models/dummy_item.dart';
 
 class ItemsList extends StatelessWidget {
-  const ItemsList({@required this.selectedItem, Key key}) : super(key: key);
+  const ItemsList({required this.selectedItem, Key? key}) : super(key: key);
 
-  final DummyItem selectedItem;
+  final DummyItem? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class ItemsList extends StatelessWidget {
             title: Text(item.title),
             selected: item == selectedItem,
             onTap: () {
-              MasterDetailScaffold.of(context)
-                  .detailsPaneNavigator
+              MasterDetailScaffold.of(context)!
+                  .detailsPaneNavigator!
                   .pushNamed('${RouteNames.itemDetails}?id=${item.id}');
             },
           );

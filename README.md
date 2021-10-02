@@ -3,7 +3,9 @@
 [![pub package](https://img.shields.io/pub/v/master_detail_scaffold.svg)](https://pub.dartlang.org/packages/master_detail_scaffold)
 [![Build Status](https://api.cirrus-ci.com/github/MaikuB/master_detail_scaffold.svg)](https://cirrus-ci.com/github/MaikuB/master_detail_scaffold/master)
 
-A Flutter package that contains widgets that help implement a responsive master-detail layout. The widget is based on the material design scaffold. Go [here](https://maikub.github.io/masterdetailscaffold/) to see the example running on the web
+A Flutter package that contains widgets that help implement a responsive master-detail layout. The widget is based on the material design scaffold and was based on exploring responsive layouts as covered in [this article](https://dexterx.dev/creating-a-responsive-flutter-application-with-a-navigation-drawer/). As such, it may not suitable for all scenarios (e.g. nested/multiple master-detail layouts) as it has been shared in case there are other members of the community who may find it useful. Go [here](https://maikub.github.io/masterdetailscaffold/) to see the example running on the web.
+
+**NOTE**: this uses the imperative `Navigator`  (1.0) APIs. There are currently no plans to migrate this to `Navigator` 2.0 so those that need `Navigator` 2.0 should look at forking this project
 
 ## Getting started
 
@@ -48,7 +50,7 @@ MasterDetailScaffold(
         builder: (context) => FloatingActionButton(
         child: Icon(Icons.reply),
         onPressed: () {
-            Scaffold.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Replying to ${_selectedItem.title}'),
             ),
